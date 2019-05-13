@@ -95,3 +95,10 @@ def extend_matrix(matrix, extensions):
             for extension in extensions:
                 week.extend([week[x] + extension, week[x+1] + extension])
     return matches
+
+def swap_home_away(matches):
+    swapped_matches = []
+    for x in range(0, len(matches), 2):
+        swapped_matches.append(matches[x+1])
+        swapped_matches.append(matches[x])
+    return swapped_matches
