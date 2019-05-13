@@ -8,12 +8,16 @@ class Match():
         self.day = day
         self.time = time
 
+    def __lt__(self, other):
+            return self.day < other.day
+
     @property
     def match_string(self):
         return '<GAME day="{day}" time="{time}" away="{away}" home="{home}" />'.format(day=self.day,
                                                                                        time=self.time,
                                                                                        home=self.home_team,
                                                                                        away=self.away_team)
+
 
 
 class MatchSeries():
@@ -40,6 +44,17 @@ class Schedule():
             day += series_break
         return schedule
 
+    @classmethod
+    def from_week_dict(cls, teams, matches, week_dict, series_length, game_times, tag=None):
+        schedule = cls(teams, matches, tag)
+        for week in week_dict:
+            matches = week_dict[week]
+            for day in range(0, series_length):
+                for x in range(0, len(matches), 2):
+                    game_day = ((week - 1) * 7) + day + 1
+                    schedule.add_match(matches[x], matches[x+1], game_day, game_times[day])
+        return schedule
+
     def __init__(self, teams, matches, tag=None):
         self.match_list = []
         self.teams = teams
@@ -53,7 +68,7 @@ class Schedule():
             self.max_day = day
 
     def write_schedule(self, start_month, start_date, start_day, structure):
-        match_strings = [match.match_string for match in self.match_list]
+        match_strings = [match.match_string for match in sorted(self.match_list)]
         tag = "_{}".format(self.tag) if self.tag else ""
         schedule_path = "{}_teams_{}_matches{}_{:.0f}.lsdl".format(self.teams, self.matches, tag, time.time())
         header_template = """<?xml version="1.0" encoding="ISO-8859-1"?>
