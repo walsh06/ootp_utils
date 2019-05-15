@@ -88,6 +88,38 @@ class Schedule():
             f.write("\n</GAMES>")
             f.write("\n</SCHEDULE>")
 
+class Week_Dict():
+
+    def __init__(self, week_dict):
+        self.week_dict = week_dict
+
+    def __str__(self):
+        week_string = ""
+        for week in sorted(self.week_dict):
+            week_string += "{}: {}\n".format(week, self.week_dict[week])
+        return week_string
+
+    def extend_week_dict(self, weeks, extensions):
+        for week in weeks:
+            self.week_dict[week] = extend_matches(self.week_dict[week], extensions)
+
+    def swap_home_away(self, week_map):
+        for x in week_map:
+            self.week_dict[x[1]] = swap_home_away(self.week_dict[x[0]])
+
+    def mirror_weeks(self, week_map):
+        for x in week_map:
+            self.week_dict[x[1]] = self.week_dict[x[0]]
+
+    def add_to_week(self, week, matches):
+        if week not in self.week_dict:
+            self.week_dict[week] = []
+        self.week_dict[week].extend(matches)
+
+    def add_to_weeks(self, week_dict):
+        for week in week_dict:
+            self.add_to_week(week, week_dict[week])
+
 
 def extend_matrix(matrix, extensions):
     matches = []
