@@ -88,13 +88,28 @@ class Schedule():
             f.write("\n</GAMES>")
             f.write("\n</SCHEDULE>")
 
+
 def extend_matrix(matrix, extensions):
-    matches = [x[:] for x in matrix]
-    for week in matches:
-        for x in range(0, len(week), 2):
-            for extension in extensions:
-                week.extend([week[x] + extension, week[x+1] + extension])
+    matches = []
+    for week in matrix:
+        matches.append(extend_matches(week, extensions))
     return matches
+
+
+def extend_week_dict(week_dict, extensions):
+    matches = {}
+    for week in week_dict:
+        matches[week] = extend_matches(week_dict[week], extensions)
+    return matches
+
+
+def extend_matches(matches, extensions):
+    extended_matches = [x for x in matches]
+    for x in range(0, len(matches), 2):
+        for extension in extensions:
+            extended_matches.extend([matches[x] + extension, matches[x+1] + extension])
+    return extended_matches
+
 
 def swap_home_away(matches):
     swapped_matches = []
@@ -102,6 +117,17 @@ def swap_home_away(matches):
         swapped_matches.append(matches[x+1])
         swapped_matches.append(matches[x])
     return swapped_matches
+
+def combine_week_dicts(week_dicts, weeks):
+    combined_dict = {}
+    for week in range(1, weeks + 1):
+        for week_dict in week_dicts:
+            if week in week_dict:
+                if week not in combined_dict:
+                    combined_dict[week] = []
+                combined_dict[week].extend(week_dict[week])
+    return combined_dict
+
 
 def print_home_count(weeks, teams):
     test = dict((i,{"home": 0, "total": 0}) for i in range(1, teams + 1))
