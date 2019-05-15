@@ -102,3 +102,16 @@ def swap_home_away(matches):
         swapped_matches.append(matches[x+1])
         swapped_matches.append(matches[x])
     return swapped_matches
+
+def print_home_count(weeks, teams):
+    test = dict((i,{"home": 0, "total": 0}) for i in range(1, teams + 1))
+    for week in weeks:
+        for x in range(0, len(weeks[week]), 2):
+            test[weeks[week][x + 1]]['home'] += 1
+            test[weeks[week][x + 1]]['total'] += 1
+            test[weeks[week][x]]['total'] += 1
+
+    for team in test:
+        print("TEAM: {}, Home matches: {} ({}%)".format(team,
+                                                       test[team]['home'],
+                                                       (float(test[team]['home'])/float(test[team]['total']) * 100)))
