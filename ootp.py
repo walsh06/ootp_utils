@@ -19,7 +19,6 @@ class Match():
                                                                                        away=self.away_team)
 
 
-
 class MatchSeries():
 
     def __init__(self, home_team, away_team, start_day, times, games):
@@ -88,6 +87,7 @@ class Schedule():
             f.write("\n</GAMES>")
             f.write("\n</SCHEDULE>")
 
+
 class Week_Dict():
 
     def __init__(self, week_dict):
@@ -141,6 +141,11 @@ def extend_matches(matches, extensions):
         for extension in extensions:
             extended_matches.extend([matches[x] + extension, matches[x+1] + extension])
     return extended_matches
+
+
+def swap_home_away_matrix(matches):
+    for match in matches[:]:
+        matches.append(swap_home_away(match))
 
 
 def swap_home_away(matches):
